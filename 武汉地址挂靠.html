@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>武汉地址挂靠托管 - 合法注册地址，当天出地址</title>
+<meta name="description" content="武汉地址挂靠托管服务，提供合法工商注册地址，可用于公司注册、地址变更，当天出地址，价格透明。">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background: #f8fafc;
+  }
+  .container { max-width: 480px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: #fff;
+    padding: 60px 20px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -30px; left: 0; right: 0;
+    height: 60px; background: #f8fafc; border-radius: 50% 50% 0 0;
+  }
+  .hero h1 { font-size: 28px; margin-bottom: 10px; letter-spacing: 1px; }
+  .hero .subtitle { font-size: 15px; opacity: 0.9; margin-bottom: 24px; }
+  .hero .tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+  .hero .tag {
+    background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+    padding: 6px 16px; border-radius: 20px; font-size: 13px;
+  }
+
+  /* Section */
+  .section { padding: 40px 0; }
+  .section-title { text-align: center; font-size: 22px; margin-bottom: 28px; color: #1e3a5f; position: relative; }
+  .section-title::after { content: ''; display: block; width: 40px; height: 3px; background: #2563eb; margin: 10px auto 0; border-radius: 2px; }
+
+  /* 优势 */
+  .advantages { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .adv-card {
+    background: #fff; border-radius: 12px; padding: 24px 16px; text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .adv-card .icon { font-size: 32px; margin-bottom: 10px; }
+  .adv-card h3 { font-size: 15px; margin-bottom: 6px; color: #1e3a5f; }
+  .adv-card p { font-size: 12px; color: #666; line-height: 1.5; }
+
+  /* 流程 */
+  .steps { display: flex; flex-direction: column; gap: 20px; }
+  .step {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; padding: 20px; border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%; background: #2563eb;
+    color: #fff; font-size: 20px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step h3 { font-size: 16px; margin-bottom: 4px; color: #1e3a5f; }
+  .step p { font-size: 13px; color: #666; }
+
+  /* 联系区 */
+  .contact {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+    color: #fff; text-align: center; padding: 48px 20px;
+    margin: 0 -20px;
+  }
+  .contact .title { font-size: 20px; margin-bottom: 8px; }
+  .contact .desc { font-size: 14px; opacity: 0.85; margin-bottom: 28px; }
+  .contact-card {
+    background: #fff; border-radius: 16px; padding: 28px 20px; color: #333;
+    max-width: 360px; margin: 0 auto;
+  }
+  .contact-card .wechat-icon { font-size: 48px; margin-bottom: 8px; }
+  .contact-card .wechat-id { font-size: 20px; font-weight: bold; color: #1e3a5f; margin-bottom: 12px; }
+  .btn-copy {
+    display: inline-block; background: #07c160; color: #fff; border: none;
+    padding: 8px 28px; border-radius: 20px; font-size: 14px; cursor: pointer;
+    margin-bottom: 20px; transition: opacity 0.2s;
+  }
+  .btn-copy:active { opacity: 0.8; }
+  .contact-card .phone { font-size: 15px; color: #666; }
+  .contact-card .phone a { color: #2563eb; text-decoration: none; font-weight: bold; }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: #fff; border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .faq-item h3 { font-size: 15px; color: #1e3a5f; margin-bottom: 6px; }
+  .faq-item p { font-size: 13px; color: #666; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 30px 20px; font-size: 12px; color: #999; }
+
+  /* Toast */
+  .toast {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: rgba(0,0,0,0.78); color: #fff; padding: 12px 28px;
+    border-radius: 8px; font-size: 15px; z-index: 999;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .toast.show { opacity: 1; }
+
+  /* 响应式微调 */
+  @media (min-width: 768px) {
+    .container { max-width: 700px; }
+    .advantages { grid-template-columns: repeat(4, 1fr); }
+    .hero h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>武汉地址挂靠托管</h1>
+  <p class="subtitle">合法注册地址 · 工商备案可用 · 当天出地址</p>
+  <div class="tags">
+    <span class="tag">公司注册</span>
+    <span class="tag">地址变更</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- 服务优势 -->
+  <section class="section">
+    <h2 class="section-title">为什么选择我们</h2>
+    <div class="advantages">
+      <div class="adv-card">
+        <div class="icon">&#x1f3db;</div>
+        <h3>合法合规</h3>
+        <p>真实地址可备案，工商税务均可使用</p>
+      </div>
+      <div class="adv-card">
+        <div class="icon">&#x26a1;</div>
+        <h3>当天出地址</h3>
+        <p>最快当天交付，不耽误注册进度</p>
+      </div>
+      <div class="adv-card">
+        <div class="icon">&#x1f4b0;</div>
+        <h3>价格透明</h3>
+        <p>一口价无隐形收费，性价比高</p>
+      </div>
+      <div class="adv-card">
+        <div class="icon">&#x1f4cd;</div>
+        <h3>武汉本地</h3>
+        <p>本地资源对接，响应快服务好</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 服务流程 -->
+  <section class="section">
+    <h2 class="section-title">办理流程</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>咨询沟通</h3>
+          <p>加微信或致电，说明你的需求（注册/变更）</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>匹配地址</h3>
+          <p>根据你的经营范围匹配合适地址，当天确认</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>交付使用</h3>
+          <p>提供地址证明材料，即可用于工商注册</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 常见问题 -->
+  <section class="section">
+    <h2 class="section-title">常见问题</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>地址挂靠合法吗？</h3>
+        <p>合法。地址挂靠是工商认可的集群注册方式，我们提供真实地址和备案材料。</p>
+      </div>
+      <div class="faq-item">
+        <h3>多久能拿到地址？</h3>
+        <p>一般当天就能确认，最快2小时内出地址。</p>
+      </div>
+      <div class="faq-item">
+        <h3>费用怎么算？</h3>
+        <p>按年收费，一口价无隐形费用，具体加微信详聊。</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 联系区 -->
+<section class="contact">
+  <p class="title">准备好开始了吗？</p>
+  <p class="desc">加微信或打电话，当天出地址</p>
+  <div class="contact-card">
+    <div class="wechat-icon">&#x1f4f1;</div>
+    <div class="wechat-id">微信号：Alicelbz</div>
+    <button class="btn-copy" onclick="copyWechat()">一键复制微信号</button>
+    <div class="phone">
+      电话：<a href="tel:15527445208">15527445208</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <footer class="footer">
+    武汉本地地址挂靠托管服务 · 15527445208
+  </footer>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+function copyWechat() {
+  navigator.clipboard.writeText('Alicelbz').then(function() {
+    showToast('已复制，去微信添加好友');
+  }).catch(function() {
+    showToast('微信号：Alicelbz');
+  });
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+</script>
+
+</body>
+</html>
