@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码生成器</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f0f2f5; min-height: 100vh; display: flex; justify-content: center; padding: 40px 20px;
+  }
+  .card { background: #fff; border-radius: 16px; padding: 40px 30px; max-width: 420px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 24px; color: #1e3a5f; }
+  .input-row { display: flex; gap: 10px; margin-bottom: 16px; }
+  .input-row input {
+    flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px;
+    font-size: 14px; outline: none; transition: border-color 0.2s;
+  }
+  .input-row input:focus { border-color: #2563eb; }
+  .btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary { background: #2563eb; color: #fff; }
+
+  .qr-wrap { text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+  .qr-label { text-align: center; font-weight: bold; font-size: 16px; color: #333; margin-top: 4px; min-height: 24px; }
+  #labelInput { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; margin-top: 12px; outline: none; }
+  #labelInput:focus { border-color: #2563eb; }
+  .url-display { text-align: center; margin-top: 12px; font-size: 12px; color: #2563eb; word-break: break-all; background: #f0f4ff; padding: 8px 12px; border-radius: 8px; }
+  .url-display a { color: #2563eb; text-decoration: none; }
+  .url-display a:hover { text-decoration: underline; }
+  .actions { display: flex; gap: 10px; margin-top: 20px; }
+  .actions button { flex: 1; padding: 10px; border-radius: 10px; font-size: 14px; cursor: pointer; border: none; transition: opacity 0.2s; }
+  .actions button:hover { opacity: 0.85; }
+  .btn-download { background: #07c160; color: #fff; }
+  .btn-clear { background: #f1f5f9; color: #64748b; }
+  .tip { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #94a3b8; }
+  .tip a { color: #2563eb; cursor: pointer; }
+  .tip a:hover { text-decoration: underline; }
+
+  .toast {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: rgba(0,0,0,0.78); color: #fff; padding: 12px 28px;
+    border-radius: 8px; font-size: 15px; z-index: 999;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>二维码生成器</h1>
+  <div class="input-row">
+    <input id="urlInput" type="text" placeholder="输入链接或文本">
+    <button class="btn btn-primary" onclick="generateFromText()">生成</button>
+  </div>
+
+  <div class="qr-wrap" id="qrcode"></div>
+  <div class="qr-label" id="qrLabel"></div>
+  <input id="labelInput" type="text" placeholder="二维码下方文字" oninput="document.getElementById('qrLabel').textContent=this.value">
+  <div class="url-display" id="urlDisplay"></div>
+
+  <div class="actions">
+    <button class="btn-download" onclick="downloadQR()">下载二维码</button>
+    <button class="btn-clear" onclick="clearQR()">清空</button>
+  </div>
+
+  <div class="tip">
+    输入任意链接或文字，生成二维码，下载即可使用
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var currentQR = null;
+
+function generateQR(text) {
+  var wrap = document.getElementById('qrcode');
+  wrap.innerHTML = '';
+  if (currentQR && currentQR.clear) currentQR.clear();
+  currentQR = new QRCode(wrap, {
+    text: text,
+    width: 260,
+    height: 260,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  var ud = document.getElementById('urlDisplay');
+  ud.innerHTML = '<a href="' + text + '" target="_blank">' + text + '</a> &nbsp;<button onclick="copyURL()" style="background:#e2e8f0;border:none;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;">复制</button>';
+}
+
+function generateFromText() {
+  var text = document.getElementById('urlInput').value.trim();
+  if (!text) { showToast('请输入链接或文本'); return; }
+  generateQR(text);
+}
+
+function downloadQR() {
+  var img = document.querySelector('#qrcode img');
+  if (!img) { showToast('先生成二维码再下载'); return; }
+  var label = document.getElementById('labelInput').value.trim();
+  var size = 260;
+  var padding = 20;
+  var labelHeight = label ? 44 : 0;
+  var totalHeight = size + padding + labelHeight;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = size + padding * 2;
+  canvas.height = totalHeight + padding;
+  var ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, padding, padding, size, size);
+
+  if (label) {
+    ctx.fillStyle = '#333333';
+    ctx.font = 'bold 18px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, canvas.width / 2, size + padding + 28);
+  }
+
+  var a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'qrcode.png';
+  a.click();
+}
+
+function clearQR() {
+  document.getElementById('qrcode').innerHTML = '';
+  document.getElementById('urlDisplay').innerHTML = '';
+  document.getElementById('labelInput').value = '';
+  document.getElementById('qrLabel').textContent = '';
+  currentQR = null;
+}
+
+function copyURL() {
+  var text = document.getElementById('urlDisplay').querySelector('a');
+  if (text) {
+    navigator.clipboard.writeText(text.textContent).then(function() {
+      showToast('链接已复制');
+    });
+  }
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+</script>
+
+</body>
+</html>
