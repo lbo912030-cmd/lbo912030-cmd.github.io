@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm start *)",
+      "Bash(npm --version)",
+      "Bash(pip3 list *)"
+    ]
+  }
+}
